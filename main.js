@@ -16,6 +16,7 @@ import OSM from 'ol/source/OSM';
 import {useGeographic} from 'ol/proj.js';
 
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 //import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 //import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 //import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -25,45 +26,34 @@ import * as THREE from 'three';
 const gridSize = 1000;
 const gridResolution = 1000;
 
-let mapView;
-let map;
-
-let viewLerpRatio = 0.04;
-
-let scene;
-
-let mapPlane;
-let mapGeometry;
-
-const trees = new Array();
-
-let camera;
-let directionalLight;
-
 let renderer;
 
-let groundGeometry;
-let groundMaterial;
-let groundPlane;
-
-let grid;
-
-let tractorGeometry;
-let tractorMaterial;
-let tractor;
-let tractorVelocity = 0.001;
-
-let treeGeometry;
-let treeMaterial;
-
-let droneGeometry;
-let droneMaterial;
-let drone;
-
+let camera;
+let viewLerpRatio = 0.04;
 let viewTargetPositionDelta = new THREE.Vector3(0, 0, 0);
 let viewCurrentPositionDelta = new THREE.Vector3(0, 0, 100);
 let viewTargetUp = new THREE.Vector3(0, 0, 1);
 let viewCurrentUp = viewTargetUp.clone();
+
+let controls;
+
+let directionalLight;
+
+let scene;
+
+let mapView;
+let map;
+let mapPlane;
+let mapGeometry;
+let groundPlane;
+let grid;
+
+let tractor;
+let tractorVelocity = 0.001;
+
+const trees = new Array();
+
+let drone;
 
 let stats;
 
@@ -181,21 +171,28 @@ function initThree() {
 	// const outputPass = new OutputPass();
 	// composer.addPass(outputPass);
 	
-
-	scene = new THREE.Scene();
-	scene.background = new THREE.Color(0x9ED2FA);
-
 	camera = new THREE.PerspectiveCamera( 
 		75, 
 		window.innerWidth / window.innerHeight, 
 		0.1, 
 		1000);
-	
+
+	controls = new OrbitControls(camera, renderer.domElement);
+    controls.minDistance = 10.0;
+    controls.maxPolarAngle = Math.PI / 180.0 * 80;
+    controls.enableDamping = false;
+    controls.screenSpacePanning = true;
+	//controls.
+//    controls.addEventListener('start', () => threeD.unfollowTractor());
+
+	scene = new THREE.Scene();
+	scene.background = new THREE.Color(0x9ED2FA);
+
 	directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 	scene.add(directionalLight);
 
-	groundGeometry = new THREE.PlaneGeometry(gridSize, gridSize, 1, 1);
-	groundMaterial = new THREE.MeshBasicMaterial({color: 0x80A15B});
+	let groundGeometry = new THREE.PlaneGeometry(gridSize, gridSize, 1, 1);
+	let groundMaterial = new THREE.MeshBasicMaterial({color: 0x80A15B});
 	groundPlane = new THREE.Mesh(groundGeometry, groundMaterial);
 	scene.add(groundPlane);
 	
@@ -204,18 +201,18 @@ function initThree() {
 //	grid.translateZ(10.1);
 	scene.add(grid);
 
-	tractorGeometry = new THREE.BoxGeometry(0.1, 1, 0.1);
+	let tractorGeometry = new THREE.BoxGeometry(0.1, 1, 0.1);
 	tractorGeometry.rotateY(Math.PI / 2);
 	tractorGeometry.translate(0, 0, 0.05);
-	tractorMaterial = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
+	let tractorMaterial = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
 	tractor = new THREE.Mesh(tractorGeometry, tractorMaterial);
 	scene.add(tractor);
 	tractorVelocity = 0.001;
 	
-	treeGeometry = new THREE.ConeGeometry(0.2, 1, 20);
+	let treeGeometry = new THREE.ConeGeometry(0.2, 1, 20);
 	treeGeometry.rotateX(Math.PI / 2);
 	treeGeometry.translate(0, 0, 0.5);
-	treeMaterial = new THREE.MeshToonMaterial({color: 0x20ff20});
+	let treeMaterial = new THREE.MeshToonMaterial({color: 0x20ff20});
 	for (let j = 0; j < 10; j++) {
 		for(let i = 0; i < 100; i++) {
 			const tree = new THREE.Mesh(treeGeometry, treeMaterial);
@@ -227,8 +224,8 @@ function initThree() {
 		}
 	}
 	
-	droneGeometry = new THREE.BoxGeometry(0.01, 0.01, 0.01);
-	droneMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
+	let droneGeometry = new THREE.BoxGeometry(0.01, 0.01, 0.01);
+	let droneMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
 	drone = new THREE.Mesh(droneGeometry, droneMaterial);
 	scene.add(drone);
 }
@@ -329,6 +326,8 @@ function renderUpdateGround() {
 
 function renderUpdateCamera() {
 	if (hudModeFollow.checked) {
+		controls.enabled = false;
+
 //		hudViewpointTop.disabled = false;
 //		hudViewpointBack.disabled = false;
 
@@ -359,8 +358,13 @@ function renderUpdateCamera() {
 	//		camera.position.addScaledVector(viewPositionDelta, viewTransition);
 		camera.lookAt(tractor.position);
 	} else if (hudModeFree.checked) {
+		controls.enabled = true;
+
+		camera.up.set(0, 0, 1);
+
 //		hudViewpointTop.disabled = true;
 //		hudViewpointBack.disabled = true;
+		controls.update();
 	}
 }
 
