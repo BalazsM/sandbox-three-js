@@ -101,12 +101,11 @@ let mouseLeftDown = false;
 function threeCanvasOnMousedown(event) {
 	mouseLeftDown = true;
 	mouseDownX = event.screenX;
-	mouseDownY = event.screenX;
+	mouseDownY = event.screenY;
 	
 	if (hudModeFollow.checked) {
 		if (!hudModeFree.checked) {
 			hudModeFree.checked = true;
-			viewTargetPositionDeltaX = tractor.position.x;
 		}
 	}
 //	console.log(event);
@@ -197,6 +196,9 @@ function mapOnPostRender() {
 // -----------------------------------------------------------------  init  --
 
 function init() {
+	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+	const tooltipList = [...tooltipTriggerList].map(e => new bootstrap.Tooltip(e))
+
 	window.addEventListener('resize', windowOnResize);
 	document.addEventListener('keydown', documentOnKeydown);
 
@@ -399,9 +401,11 @@ function renderUpdateCamera() {
 //		hudViewpointBack.disabled = false;
 
 		if (hudViewpointTop.checked) {
+			viewTargetPositionDeltaX = tractor.position.x;
+			viewTargetPositionDeltaY = tractor.position.y;
 			viewTargetPositionDelta.set(0, 0, viewTargetZoom);
-			if (hudHeadingFront.checked)
-				viewTargetPositionDelta.applyEuler(tractor.rotation);
+//			if (hudHeadingFront.checked)
+//				viewTargetPositionDelta.applyEuler(tractor.rotation);
 			viewCurrentPositionDelta.lerp(viewTargetPositionDelta, viewLerpRatio);
 
 			viewTargetUp.set(0, 1, 0);
