@@ -8,7 +8,7 @@
 		<title>Three.js</title>
 
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-		<script type="module" crossorigin src="/sandbox-three-js/assets/index-fc7f9f7d.js"></script>
+		<script type="module" crossorigin src="/sandbox-three-js/assets/index-b05a3064.js"></script>
 		<link rel="stylesheet" href="/sandbox-three-js/assets/index-cb0f75f8.css">
 	</head>
 	<body>
@@ -66,8 +66,12 @@
 			</div> -->
 
 			<div class="btn-group ms-2 mt-2" role="group">
+				<label class="btn btn-dark d-none d-sm-inline text-start" style="width: 100px">
+					Mode
+				</label>
+
 				<input id="hudModeFollow" type="radio" class="btn-check" name="hudMode" autocomplete="off" checked>
-				<label class="btn btn-outline-dark" for="hudModeFollow">
+				<label class="btn btn-outline-dark" for="hudModeFollow" data-bs-toggle="tooltip" data-bs-title="Follow">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bullseye" viewBox="0 0 16 16">
 						<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
 						<path d="M8 13A5 5 0 1 1 8 3a5 5 0 0 1 0 10zm0 1A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/>
@@ -77,7 +81,7 @@
 				</label>
 			  
 				<input id="hudModeFree" type="radio" class="btn-check" name="hudMode" autocomplete="off">
-				<label class="btn btn-outline-dark" for="hudModeFree">
+				<label class="btn btn-outline-dark" for="hudModeFree" data-bs-toggle="tooltip" data-bs-title="Free">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-escape" viewBox="0 0 16 16">
 						<path d="M8.538 1.02a.5.5 0 1 0-.076.998 6 6 0 1 1-6.445 6.444.5.5 0 0 0-.997.076A7 7 0 1 0 8.538 1.02Z"/>
 						<path d="M7.096 7.828a.5.5 0 0 0 .707-.707L2.707 2.025h2.768a.5.5 0 1 0 0-1H1.5a.5.5 0 0 0-.5.5V5.5a.5.5 0 0 0 1 0V2.732l5.096 5.096Z"/>
@@ -87,15 +91,19 @@
 			<br/>
 
 			<div class="btn-group ms-2 mt-2" role="group">
+				<label class="btn btn-dark d-none d-sm-inline text-start" style="width: 100px">
+					Heading
+				</label>
+
 				<input id="hudHeadingFront" type="radio" class="btn-check" name="hudHeading" autocomplete="off" checked>
-				<label class="btn btn-outline-dark" for="hudHeadingFront">
+				<label class="btn btn-outline-dark" for="hudHeadingFront" data-bs-toggle="tooltip" data-bs-title="Front">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cursor" viewBox="0 0 16 16">
 						<path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103zM2.25 8.184l3.897 1.67a.5.5 0 0 1 .262.263l1.67 3.897L12.743 3.52 2.25 8.184z"/>
 					</svg>
 				</label>
 			  
 				<input id="hudHeadingNorth" type="radio" class="btn-check" name="hudHeading" autocomplete="off">
-				<label class="btn btn-outline-dark" for="hudHeadingNorth">
+				<label class="btn btn-outline-dark" for="hudHeadingNorth" data-bs-toggle="tooltip" data-bs-title="North">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-compass" viewBox="0 0 16 16">
 						<path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016zm6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
 						<path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
@@ -105,15 +113,19 @@
 			<br/>
 
 			<div class="btn-group ms-2 mt-2" role="group">
+				<label class="btn btn-dark d-none d-sm-inline text-start" style="width: 100px">
+					Viewpoint
+				</label>
+
 				<input id="hudViewpointTop" type="radio" class="btn-check" name="hudViewpoint" autocomplete="off" checked>
-				<label class="btn btn-outline-dark" for="hudViewpointTop">
+				<label class="btn btn-outline-dark" for="hudViewpointTop" data-bs-toggle="tooltip" data-bs-title="Top">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
 						<path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"/>
 					</svg>
 				</label>
 			  
 				<input id="hudViewpointBack" type="radio" class="btn-check" name="hudViewpoint" autocomplete="off">
-				<label class="btn btn-outline-dark" for="hudViewpointBack">
+				<label class="btn btn-outline-dark" for="hudViewpointBack" data-bs-toggle="tooltip" data-bs-title="Back">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
 						<path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
 					</svg>
@@ -122,15 +134,19 @@
 			<br/>
 
 			<div class="btn-group ms-2 mt-2" role="group">
+				<label class="btn btn-dark d-none d-sm-inline text-start" style="width: 100px">
+					Ground
+				</label>
+
 				<input id="hudGroundGrid" type="radio" class="btn-check" name="hudGround" autocomplete="off" checked>
-				<label class="btn btn-outline-dark" for="hudGroundGrid">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-grid-3x3" viewBox="0 0 16 16">
-						<path d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13zM1.5 1a.5.5 0 0 0-.5.5V5h4V1H1.5zM5 6H1v4h4V6zm1 4h4V6H6v4zm-1 1H1v3.5a.5.5 0 0 0 .5.5H5v-4zm1 0v4h4v-4H6zm5 0v4h3.5a.5.5 0 0 0 .5-.5V11h-4zm0-1h4V6h-4v4zm0-5h4V1.5a.5.5 0 0 0-.5-.5H11v4zm-1 0V1H6v4h4z"/>
-					</svg>
+				<label class="btn btn-outline-dark" for="hudGroundGrid" data-bs-toggle="tooltip" data-bs-title="Solid">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-square" viewBox="0 0 16 16">
+						<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+					  </svg>
 				</label>
 			  
 				<input id="hudGroundMap" type="radio" class="btn-check" name="hudGround" autocomplete="off">
-				<label class="btn btn-outline-dark" for="hudGroundMap">
+				<label class="btn btn-outline-dark" for="hudGroundMap" data-bs-toggle="tooltip" data-bs-title="Map">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-map" viewBox="0 0 16 16">
 						<path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103zM10 1.91l-4-.8v12.98l4 .8V1.91zm1 12.98 4-.8V1.11l-4 .8v12.98zm-6-.8V1.11l-4 .8v12.98l4-.8z"/>
 					</svg>
@@ -183,6 +199,12 @@
 			  <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
 				<path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/>
 			  </svg> -->
+
+			  <!-- grid svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-grid-3x3" viewBox="0 0 16 16">
+				<path d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13zM1.5 1a.5.5 0 0 0-.5.5V5h4V1H1.5zM5 6H1v4h4V6zm1 4h4V6H6v4zm-1 1H1v3.5a.5.5 0 0 0 .5.5H5v-4zm1 0v4h4v-4H6zm5 0v4h3.5a.5.5 0 0 0 .5-.5V11h-4zm0-1h4V6h-4v4zm0-5h4V1.5a.5.5 0 0 0-.5-.5H11v4zm-1 0V1H6v4h4z"/>
+			</svg -->
+
+
 		</div>
 
 		<!--  settings offcanvas  ------------------------------------------->
