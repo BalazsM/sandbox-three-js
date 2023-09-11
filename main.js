@@ -16,7 +16,7 @@ import OSM from 'ol/source/OSM';
 import {useGeographic} from 'ol/proj.js';
 
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+//import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 //import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 //import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 //import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -28,10 +28,21 @@ const gridResolution = 1000;
 
 let renderer;
 
+let mouseDownX = 0;
+let mouseDownY = 0;
+
 let camera;
 let viewLerpRatio = 0.04;
+let viewTargetPositionDeltaX = 0;
+let viewTargetPositionDeltaY = 0;
+let viewTargetMinZoom = 3; // TODO: create property class (min, max, default, currentValue, targetValue)
+let viewTargetMaxZoom = 100;
+let viewTargetZoom = 25;
+let viewTargetMinDistance = 1; // TODO: create property class (min, max, default, currentValue, targetValue)
+let viewTargetMaxDistance = 10;
+let viewTargetDistance = 3;
 let viewTargetPositionDelta = new THREE.Vector3(0, 0, 0);
-let viewCurrentPositionDelta = new THREE.Vector3(0, 0, 100);
+let viewCurrentPositionDelta = new THREE.Vector3(0, 0, viewTargetZoom);
 let viewTargetUp = new THREE.Vector3(0, 0, 1);
 let viewCurrentUp = viewTargetUp.clone();
 
@@ -86,6 +97,54 @@ function exitFullscreenOnClick() {
 		document.msExitFullscreen();
 	}	
 }
+let mouseLeftDown = false;
+function threeCanvasOnMousedown(event) {
+	mouseLeftDown = true;
+	mouseDownX = event.screenX;
+	mouseDownY = event.screenX;
+	
+	if (hudModeFollow.checked) {
+		if (!hudModeFree.checked) {
+			hudModeFree.checked = true;
+			viewTargetPositionDeltaX = tractor.position.x;
+		}
+	}
+//	console.log(event);
+}
+
+function threeCanvasOnMouseup(event) {
+	mouseLeftDown = false;
+	//console.log(event);
+}
+
+function threeCanvasOnMousemove(event) {
+	//console.log(event);
+	if (mouseLeftDown) {
+		viewTargetPositionDeltaX += (mouseDownX - event.screenX) / 50.0;
+		viewTargetPositionDeltaY -= (mouseDownY - event.screenY) / 50.0;
+//		console.log(mouseDownX, event.screenX, viewTargetPositionDeltaX);
+		mouseDownX = event.screenX;
+		mouseDownY = event.screenY;
+	}
+}
+
+function threeCanvasOnWheel(event) {
+	//console.log(event);
+	if (hudViewpointTop.checked) {
+		viewTargetZoom += viewTargetZoom * event.deltaY / 360.0;
+		if (viewTargetZoom < viewTargetMinZoom)
+			viewTargetZoom = viewTargetMinZoom;
+		else if (viewTargetZoom > viewTargetMaxZoom)
+			viewTargetZoom = viewTargetMaxZoom;
+	} else if (hudViewpointBack.checked) {
+		viewTargetDistance += viewTargetDistance * event.deltaY / 360.0;
+		if (viewTargetDistance < viewTargetMinDistance)
+			viewTargetDistance = viewTargetMinDistance;
+		else if (viewTargetDistance > viewTargetMaxDistance)
+			viewTargetDistance = viewTargetMaxDistance;
+	}
+//	console.log(viewTargetDistance);
+}
 
 function documentOnKeydown(event) {
 	console.log(event.keyCode);
@@ -123,7 +182,10 @@ function mapOnPostRender() {
 	let canvas = document.getElementById('mapCanvas').children[0].children[0].children[0].children[0];
 	const texture = new THREE.CanvasTexture(canvas);
 
-	const material = new THREE.MeshBasicMaterial({map: texture});
+	const material = new THREE.MeshBasicMaterial({
+		map: texture,
+//		depthTest: false
+	});
 	if (mapPlane != null) {
 		scene.remove(mapPlane);
 	}
@@ -154,6 +216,11 @@ function initStats() {
 }
 
 function initThree() {
+	threeCanvas.addEventListener("mousedown", threeCanvasOnMousedown);
+	threeCanvas.addEventListener("mouseup", threeCanvasOnMouseup);
+	threeCanvas.addEventListener("mousemove", threeCanvasOnMousemove);
+	threeCanvas.addEventListener("wheel", threeCanvasOnWheel);
+
 	renderer = new THREE.WebGLRenderer({
 		canvas: threeCanvas,
 		antialias: true
@@ -177,11 +244,11 @@ function initThree() {
 		0.1, 
 		1000);
 
-	controls = new OrbitControls(camera, renderer.domElement);
-    controls.minDistance = 10.0;
-    controls.maxPolarAngle = Math.PI / 180.0 * 80;
-    controls.enableDamping = false;
-    controls.screenSpacePanning = true;
+	// controls = new OrbitControls(camera, renderer.domElement);
+    // controls.minDistance = 10.0;
+    // controls.maxPolarAngle = Math.PI / 180.0 * 80;
+    // controls.enableDamping = false;
+    // controls.screenSpacePanning = true;
 	//controls.
 //    controls.addEventListener('start', () => threeD.unfollowTractor());
 
@@ -200,6 +267,9 @@ function initThree() {
 	grid.rotateX(Math.PI / 2);
 //	grid.translateZ(10.1);
 	scene.add(grid);
+
+	mapGeometry = new THREE.PlaneGeometry(100, 100);
+	mapGeometry.translate(0, 0, 0.001);
 
 	let tractorGeometry = new THREE.BoxGeometry(0.1, 1, 0.1);
 	tractorGeometry.rotateY(Math.PI / 2);
@@ -251,9 +321,6 @@ function initMap() {
 	
 	mapView.setCenter([16.94529940000001, 46.685864200000026]);
 	mapView.setZoom(22);
-
-	mapGeometry = new THREE.PlaneGeometry(100, 100);
-	mapGeometry.translate(0, 0, 0.001);
 }
 
 // ---------------------------------------------------------------  render  --
@@ -326,13 +393,13 @@ function renderUpdateGround() {
 
 function renderUpdateCamera() {
 	if (hudModeFollow.checked) {
-		controls.enabled = false;
+//		controls.enabled = false;
 
 //		hudViewpointTop.disabled = false;
 //		hudViewpointBack.disabled = false;
 
 		if (hudViewpointTop.checked) {
-			viewTargetPositionDelta.set(0, 0, 15);
+			viewTargetPositionDelta.set(0, 0, viewTargetZoom);
 			if (hudHeadingFront.checked)
 				viewTargetPositionDelta.applyEuler(tractor.rotation);
 			viewCurrentPositionDelta.lerp(viewTargetPositionDelta, viewLerpRatio);
@@ -358,13 +425,36 @@ function renderUpdateCamera() {
 	//		camera.position.addScaledVector(viewPositionDelta, viewTransition);
 		camera.lookAt(tractor.position);
 	} else if (hudModeFree.checked) {
-		controls.enabled = true;
+//		controls.enabled = true;
+
+		if (hudViewpointTop.checked) {
+//			console.log('kaki');
+			viewTargetPositionDelta.set(viewTargetPositionDeltaX, viewTargetPositionDeltaY, viewTargetZoom);
+//			if (hudHeadingFront.checked)
+//				viewTargetPositionDelta.applyEuler(tractor.rotation);
+			viewCurrentPositionDelta.copy(viewTargetPositionDelta);
+
+			viewTargetUp.set(0, 1, 0);
+			if (hudHeadingFront.checked)
+				viewTargetUp.applyEuler(tractor.rotation);
+			viewCurrentUp.lerp(viewTargetUp, viewLerpRatio);
+		} else if (hudViewpointBack.checked) {
+			viewTargetPositionDelta.set(0, -2, 0.8);
+			if (hudHeadingFront.checked)
+				viewTargetPositionDelta.applyEuler(tractor.rotation);
+			viewCurrentPositionDelta.lerp(viewTargetPositionDelta, viewLerpRatio);
+
+			viewTargetUp.set(0, 0, 1);
+			viewCurrentUp.lerp(viewTargetUp, viewLerpRatio);
+		}
 
 		camera.up.set(0, 0, 1);
+//		camera.position.copy(tractor.position);
+		camera.position.copy(viewCurrentPositionDelta);
 
 //		hudViewpointTop.disabled = true;
 //		hudViewpointBack.disabled = true;
-		controls.update();
+//		controls.update();
 	}
 }
 
